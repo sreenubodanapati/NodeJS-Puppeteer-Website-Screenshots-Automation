@@ -9,24 +9,25 @@ const puppeteer = require("puppeteer");
         userDataDir: './tmp'
     });
     const page = await browser.newPage();
-    await page.goto('https://www.vsplash.com/');
+    await page.goto('https://www.mindspace.me/');
 
-    // Finding Links
+    // Finding Links in given website URL
     const links = await page.evaluate(()=>{
         const anchors = document.querySelectorAll('body a');
         const herfs = Array.from(anchors).map(a=>a.href);
         return herfs;
     });
 
+    // Removing Duplicate Links in link array
     for (let i = 0; i < links.length; i++) {
         let index = links.indexOf (links [i]); 
         if (index !== i) { 
             links.splice (i, 1);
             i--;
-        };        
+        };
     }
   
-    // loop through the array of URLs
+    // loop through the array of URLs and taking screenshorts
     for (let i = 0; i < links.length; i++) {
         const link = links[i];
         await page.goto(link);
@@ -34,12 +35,7 @@ const puppeteer = require("puppeteer");
             path: i+'.png',
             fullPage: true
         });
-    }
-
-    await page.screenshot({
-        path: 'one.png',
-        fullPage: true
-    });
+    };
     
     console.log(links);
     await browser.close();
